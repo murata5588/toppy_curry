@@ -11,13 +11,15 @@ const MENU_DATA = {
 
   spices: [
     { name: "とくせいチャーハン", image: "images/taste_normal.png" },
-    { name: "キムチチャーハン", image: "images/taste_kimuchi.png" }
+    { name: "キムチチャーハン", image: "images/taste_kimuchi.png" },
+    { name: "かにチャーハン", image: "images/taste_kani.png" },
+    { name: "レタスチャーハン", image: "images/taste_retasu.png" }
   ],
 
   toppings: [
     { id: "medamayaki", name: "めだまやき", image: "images/food_medamayaki.png" },
     { id: "cheese", name: "チーズ", image: "images/cheese_slice.png" },
-    { id: "nattou", name: "なっとう", image: "images/food_nattou_wara.png" }
+    { id: "nattou", name: "なっとう", image: "images/food_nattou_wara.png", alertMessage: "自分でのせてね！"  }
   ],
 
   sides: [
