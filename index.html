@@ -1,447 +1,77 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>◆ トッピーカレーへようこそ ◆</title>
-<style>
-  body {
-    font-family: sans-serif;
-    background-color: #e0e0e0;
-    margin: 0;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-  }
-
-  .tablet-container {
-    background: white;
-    width: 800px;
-    height: 600px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    padding: 30px;
-    box-sizing: border-box;
-    position: relative;
-  }
-
-  .screen {
-    display: none;
-    height: 100%;
-  }
-  .screen.active {
-    display: block;
-  }
-
-  /* 戻るボタンのデザイン */
-  .back-btn {
-    background-color: #607d8b; /* 落ち着いたブルーグレー */
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 10px 20px;
-    font-size: 1em;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 4px 0 #455a64;
-    transition: transform 0.1s, box-shadow 0.1s;
-    margin-bottom: 10px;
-  }
-  .back-btn:active {
-    transform: translateY(4px);
-    box-shadow: 0 0 0 #455a64;
-  }
-
-  h2 {
-    text-align: center;
-    color: #333;
-    margin-top: 0;
-    margin-bottom: 30px;
-  }
-
-  .button-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-  }
-
-  .topping-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    margin-bottom: 20px;
-  }
-
-  .choice-btn {
-    background-color: #ff9800;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 25px;
-    font-size: 1.5em;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 6px 0 #e65100;
-    transition: transform 0.1s, box-shadow 0.1s;
-  }
-
-  .choice-btn:active {
-    transform: translateY(6px);
-    box-shadow: 0 0 0 #e65100;
-  }
-
-  .skip-btn {
-    background-color: #9e9e9e;
-    box-shadow: 0 6px 0 #616161;
-    width: 100%;
-    margin-top: 20px;
-  }
-  .skip-btn:active {
-    box-shadow: 0 0 0 #616161;
-  }
-
-  .success-btn {
-    background-color: #4caf50;
-    box-shadow: 0 6px 0 #2e7d32;
-    width: 100%;
-    margin-top: 40px;
-  }
-  .success-btn:active {
-    box-shadow: 0 0 0 #2e7d32;
-  }
-
-  .topping-item {
-    cursor: pointer;
-  }
-  .topping-item input[type="checkbox"] {
-    display: none;
-  }
-  .topping-item span {
-    display: block;
-    background-color: #fff;
-    color: #333;
-    border: 2px solid #ff9800;
-    border-radius: 8px;
-    padding: 20px 10px;
-    font-size: 1.2em;
-    font-weight: bold;
-    text-align: center;
-    box-shadow: 0 4px 0 #ccc;
-    transition: all 0.1s;
-  }
-  .topping-item input[type="checkbox"]:checked ~ span {
-    background-color: #ff9800;
-    color: white;
-    box-shadow: 0 4px 0 #e65100;
-    transform: translateY(2px);
-  }
-
-  .confirm-list {
-    background-color: #f9f9f9;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    padding: 20px;
-    max-width: 500px;
-    margin: 0 auto;
-    font-size: 1.3em;
-  }
-
-  .confirm-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px dashed #ccc;
-  }
-  .confirm-item:last-child {
-    border-bottom: none;
-  }
-
-  .confirm-val {
-    font-weight: bold;
-    color: #e65100;
-  }
-
-  /* サイドメニューなどの画像付きボタン用 */
-  .with-image {
-    padding: 15px 10px 10px 10px; /* 画像が入る分、少し調整 */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .with-image img {
-    width: 100%;
-    height: 120px;
-    object-fit: cover; /* 画像の比率を保ったまま綺麗に切り取る */
-    border-radius: 6px;
-  }
-
-  /* トッピングの画像付き枠用 */
-  .with-image-topping img {
-    width: 100%;
-    height: 100px;
-    object-fit: contain;
-    background-color: #f0f0f0; /* 余白ができる場合の色 */
-    border-radius: 6px;
-    margin-bottom: 8px;
-    display: block;
-  }
-
-  /* ヘッダーロゴのスタイル */
-  .header-logo {
-    text-align: center;
-    padding: 10px 0 20px 0;
-    border-bottom: 2px solid #ff9800;
-    margin-bottom: 20px;
-  }
-
-  .header-logo h1 {
-    margin: 0;
-    font-size: 2em;
-    color: #e65100;
-    letter-spacing: 2px;
-    font-family: "Hachi Maru Pop", cursive;
-    font-weight: 1600;
-    font-style: normal;
-    /* 文字に少し影をつけて立体的に */
-    text-shadow: 2px 2px 0px #ffd54f;
-  }
-
-  #custom-popup {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5); /* 半透明の黒背景 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
-  }
-
-  .popup-content {
-    background: white;
-    padding: 40px;
-    border-radius: 15px;
-    text-align: center;
-    border: 4px solid #ff9800;
-    font-size: 1.5em;
-    font-family: 'Yomogi', cursive; /* 先ほどのフォントを適用 */
-  }
-</style>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Hachi+Maru+Pop&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hachi+Maru+Pop&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <div class="tablet-container">
   
   <header class="header-logo">
-    <h1>トッピーカレー</h1>
+    <h1 id="store-logo"></h1>
   </header>
 
   <div id="custom-popup" style="display: none;">
-  <div class="popup-content">
-    <p>ラッシーはじぶんでつくってね！</p>
-    <button class="choice-btn" onclick="closePopup()">わかった！</button>
-  </div>
-  </div>
-
-  <div id="screen-size" class="screen active">
-    <h2>1. ごはんのサイズを選んでください</h2>
-    <div class="button-grid">
-      <button class="choice-btn" onclick="goToNext('screen-size', 'screen-spice', 'size', 'すくなめ')">すくなめ</button>
-      <button class="choice-btn" onclick="goToNext('screen-size', 'screen-spice', 'size', 'ふつう')">ふつう</button>
-      <button class="choice-btn" onclick="goToNext('screen-size', 'screen-spice', 'size', 'おおもり')">おおもり</button>
-      <button class="choice-btn" onclick="goToNext('screen-size', 'screen-spice', 'size', '超おおもり')">超おおもり</button>
+    <div class="popup-content">
+      <p id="popup-text"></p>
+      <button class="choice-btn" id="popup-close-btn">わかった！</button>
     </div>
   </div>
 
+  <div id="screen-size" class="screen active">
+    <h2>1. チャーハンのサイズを選んでください</h2>
+    <div class="button-grid" id="container-size"></div>
+  </div>
+
   <div id="screen-spice" class="screen">
-    <button class="back-btn" onclick="goBack('screen-spice', 'screen-size')">◀ 戻る</button>
-    <h2>2. 辛さを選んでください</h2>
-    <div class="button-grid">
-      <button class="choice-btn" onclick="goToNext('screen-spice', 'screen-topping', 'spice', 'ふつう')">ふつう</button>
-      <button class="choice-btn" onclick="goToNext('screen-spice', 'screen-topping', 'spice', 'ちょいから')">ちょいから</button>
-      <button class="choice-btn" onclick="goToNext('screen-spice', 'screen-topping', 'spice', 'からい')">からい</button>
-      <button class="choice-btn" onclick="goToNext('screen-spice', 'screen-topping', 'spice', 'げきから')">げきから</button>
+    <h2>2. チャーハンの種類を選んでください</h2>
+    <div class="button-grid" id="container-spice"></div>
+    <div class="footer-actions">
+      <button class="back-btn" data-back-to="screen-size">◀ 戻る</button>
     </div>
   </div>
 
   <div id="screen-topping" class="screen">
-    <button class="back-btn" onclick="goBack('screen-topping', 'screen-spice')">◀ 戻る</button>
-    <h2>3. トッピングを選んでください（複数選択可）</h2>
-    <div class="topping-grid">
-      <label class="topping-item with-image-topping">
-        <input type="checkbox" name="topping" value="ぱりぱりチキン">
-        <img src="images/food_chicken_sotee.png" alt="ぱりぱりチキン">
-        <span>ぱりぱりチキン</span>
-      </label>
-      <label class="topping-item with-image-topping">
-        <input type="checkbox" name="topping" value="ソーセージ">
-        <img src="images/souseiji.png" alt="ソーセージ">
-        <span>ソーセージ</span>
-      </label>
-      <label class="topping-item with-image-topping">
-        <input type="checkbox" name="topping" value="チーズ">
-        <img src="images/cheese_slice.png" alt="チーズ">
-        <span>チーズ</span>
-      </label>
-      <label class="topping-item with-image-topping">
-        <input type="checkbox" name="topping" value="きのこ">
-        <img src="images/kinoko_shiitake.png" alt="きのこ">
-        <span>きのこ</span>
-      </label>
-      <label class="topping-item with-image-topping">
-        <input type="checkbox" name="topping" value="なっとう">
-        <img src="images/food_nattou_wara.png" alt="なっとう">
-        <span>なっとう</span>
-      </label>
-      <label class="topping-item with-image-topping">
-        <input type="checkbox" name="topping" value="ほうれんそう">
-        <img src="images/hourensou_spinach.png" alt="ほうれんそう">
-        <span>ほうれんそう</span>
-      </label>
+    <h2>3. トッピングを選んでください</h2>
+    <div class="topping-grid" id="container-topping"></div>
+    <div class="footer-actions">
+      <button class="back-btn" data-back-to="screen-spice">◀ 戻る</button>
+      <button class="choice-btn skip-btn" id="btn-save-topping">決定して次へ</button>
     </div>
-    <button class="choice-btn skip-btn" onclick="saveToppingsAndGoNext()">トッピングを決定して次へ</button>
   </div>
 
   <div id="screen-side" class="screen">
-    <button class="back-btn" onclick="goBack('screen-side', 'screen-topping')">◀ 戻る</button>
-    <h2>4. サイドメニューを選んでください（複数選択可）</h2>
-    <div class="topping-grid">
-      <label class="topping-item with-image-topping">
-        <input type="checkbox" name="side" value="サラダ">
-        <img src="images/food_vegetable_sald.png" alt="サラダ">
-        <span>サラダ</span>
-      </label>
-      <label class="topping-item with-image-topping">
-        <input type="checkbox" name="side" value="ラッシー">
-        <img src="images/drink_lassi.png" alt="ラッシー">
-        <span>ラッシー</span>
-      </label>
+    <h2>4. サイドメニューを選んでください</h2>
+    <div class="topping-grid" id="container-side"></div>
+    <div class="footer-actions">
+      <button class="back-btn" data-back-to="screen-topping">◀ 戻る</button>
+      <button class="choice-btn skip-btn" id="btn-save-side">決定して次へ</button>
     </div>
-    <button class="choice-btn skip-btn" onclick="saveSidesAndGoConfirm()">サイドメニューを決定して確認へ</button>
   </div>
 
   <div id="screen-confirm" class="screen">
-    <button class="back-btn" onclick="goBack('screen-confirm', 'screen-side')">◀ 戻る</button>
-    <h2>5. ご注文内容の確認</h2>
+    <h2>5. ご注文の確認</h2>
     <div class="confirm-list">
-      <div class="confirm-item">
-        <span>サイズ：</span>
-        <span id="summary-size" class="confirm-val"></span>
-      </div>
-      <div class="confirm-item">
-        <span>辛さ：</span>
-        <span id="summary-spice" class="confirm-val"></span>
-      </div>
-      <div class="confirm-item">
-        <span>トッピング：</span>
-        <span id="summary-topping" class="confirm-val"></span>
-      </div>
-      <div class="confirm-item">
-        <span>サイドメニュー：</span>
-        <span id="summary-side" class="confirm-val"></span>
-      </div>
+      <div class="confirm-item"><span>サイズ：</span><span id="summary-size" class="confirm-val"></span></div>
+      <div class="confirm-item"><span>種類：</span><span id="summary-spice" class="confirm-val"></span></div>
+      <div class="confirm-item"><span>トッピング：</span><span id="summary-topping" class="confirm-val"></span></div>
+      <div class="confirm-item"><span>サイドメニュー：</span><span id="summary-side" class="confirm-val"></span></div>
     </div>
-    <button class="choice-btn success-btn" onclick="sendOrder()">この内容で注文を確定する</button>
+    <div class="footer-actions">
+      <button class="back-btn" data-back-to="screen-side">◀ 戻る</button>
+      <button class="choice-btn success-btn" id="btn-send-order">注文する</button>
+    </div>
   </div>
 
 </div>
 
-<script>
-  let currentOrder = {
-    size: "",
-    spice: "",
-    topping: [], 
-    side: ""
-  };
-
-  function goToNext(currentScreenId, nextScreenId, key, value) {
-    if (key !== '') {
-      currentOrder[key] = value;
-    }
-    document.getElementById(currentScreenId).classList.remove('active');
-    document.getElementById(nextScreenId).classList.add('active');
-  }
-
-  function goBack(currentScreenId, previousScreenId) {
-    document.getElementById(currentScreenId).classList.remove('active');
-    document.getElementById(previousScreenId).classList.add('active');
-  }
-
-  function saveToppingsAndGoNext() {
-    const checkedBoxes = document.querySelectorAll('input[name="topping"]:checked');
-    // トッピング配列を更新
-    currentOrder.topping = Array.from(checkedBoxes).map(box => box.value);
-
-    updateConfirmScreen();
-    document.getElementById('screen-topping').classList.remove('active');
-    document.getElementById('screen-side').classList.add('active');
-  }
-
-  function saveSidesAndGoConfirm() {
-    const checkedSides = document.querySelectorAll('input[name="side"]:checked');
-    // サイドメニューを更新
-    currentOrder.side = Array.from(checkedSides).map(box => box.value);
-
-    updateConfirmScreen();
-    document.getElementById('screen-side').classList.remove('active');
-    document.getElementById('screen-confirm').classList.add('active');
-  }
-
-  function updateConfirmScreen() {
-    document.getElementById('summary-size').textContent = currentOrder.size;
-    document.getElementById('summary-spice').textContent = currentOrder.spice;
-    
-    document.getElementById('summary-topping').textContent = 
-      currentOrder.topping.length > 0 ? currentOrder.topping.join('、') : "なし";
-    
-    // 配列の判定を修正
-    document.getElementById('summary-side').textContent = 
-      (Array.isArray(currentOrder.side) && currentOrder.side.length > 0) ? currentOrder.side.join('、') : "なし";
-  }
-
-  function sendOrder() {
-    alert("ご注文ありがとうございました！厨房へ送信しました。");
-    
-    document.getElementById('screen-confirm').classList.remove('active');
-    document.getElementById('screen-size').classList.add('active');
-    
-    // 全チェックボックスをリセット
-    document.querySelectorAll('input[type="checkbox"]').forEach(box => box.checked = false);
-
-    currentOrder = { size: "", spice: "", topping: [], side: "" };
-    updateConfirmScreen();
-  }
-
-  // ポップアップを開く
-  function showLassiPopup() {
-    document.getElementById('custom-popup').style.display = 'flex';
-  }
-
-  // ポップアップを閉じる
-  function closePopup() {
-    document.getElementById('custom-popup').style.display = 'none';
-  }
-
-  // サイドメニューのクリックイベントを修正
-  document.addEventListener('DOMContentLoaded', function() {
-    const sideCheckboxes = document.querySelectorAll('input[name="side"]');
-    sideCheckboxes.forEach(box => {
-      box.addEventListener('change', function() {
-        if (this.value === 'ラッシー' && this.checked) {
-          showLassiPopup(); // アラートの代わりにこれを呼ぶ
-        }
-      });
-    });
-  });
-
-</script>
-
+<script src="js/menu-data.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
