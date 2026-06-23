@@ -134,7 +134,7 @@ function updateConfirmScreen() {
 }
 
 function sendOrder() {
-  alert("ご注文ありがとうございました！厨房へ送信しました。");
+  alert("ご注文ありがとうございました！とっぴーへ送りました。");
   switchScreen('screen-confirm', 'screen-size');
   document.querySelectorAll('input[type="checkbox"]').forEach(box => box.checked = false);
   currentOrder = { size: "", spice: "", topping: [], side: [] };
